@@ -35,10 +35,10 @@ def group_posts(request, slug):
 
 
 def profile(request, username):
-    user = get_object_or_404(User, username=username)
-    full_name = user.get_full_name()
+    author = get_object_or_404(User, username=username)
+    full_name = author.get_full_name()
 
-    post_list = user.posts.all()
+    post_list = author.posts.all()
     post_count = post_list.count()
     page_obj = paginator_my(request, post_list)
 
@@ -46,6 +46,7 @@ def profile(request, username):
         'page_obj': page_obj,
         'post_count': post_count,
         'full_name': full_name,
+        'author': author,
     }
     return render(request, 'posts/profile.html', context)
 
@@ -97,7 +98,8 @@ def post_edit(request, post_id):
             form_obj = form.save(commit=False)
             form_obj.author = request.user
             form_obj.save()
-            return redirect('posts:profile', username=request.user)
+            return redirect('posts:post_detail', post_id=post.pk)
+            # return redirect('posts:profile', username=request.user)
     else:
         form = PostForm(instance=post)
 
