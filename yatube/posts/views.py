@@ -3,6 +3,7 @@ from .models import Post, Group
 from .forms import PostForm
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 def paginator_my(request, post_list):
@@ -65,6 +66,7 @@ def post_detail(request, post_id):
     return render(request, 'posts/post_detail.html', context)
 
 
+@login_required
 def post_create(request):
 
     if request.method == 'POST':
