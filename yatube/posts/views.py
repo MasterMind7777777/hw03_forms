@@ -3,7 +3,6 @@ from .models import Post, Group
 from .forms import PostForm
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied
 
 
 def paginator_my(request, post_list):
@@ -69,7 +68,7 @@ def post_detail(request, post_id):
 def post_create(request):
 
     if request.method == 'POST':
-        form = PostForm(request.POST) 
+        form = PostForm(request.POST)
         if form.is_valid():
             form_obj = form.save(commit=False)
             form_obj.author = request.user
@@ -85,7 +84,6 @@ def post_create(request):
 
 
 def post_edit(request, post_id):
-    
 
     post = get_object_or_404(Post, id=post_id)
     if post.author != request.user:
@@ -93,7 +91,7 @@ def post_edit(request, post_id):
     is_edit = True
 
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post) 
+        form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form_obj = form.save(commit=False)
             form_obj.author = request.user
@@ -107,6 +105,4 @@ def post_edit(request, post_id):
         'form': form,
         'is_edit': is_edit,
     }
-
-    
     return render(request, 'posts/create_post.html', context)
